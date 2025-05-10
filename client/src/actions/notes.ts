@@ -1,13 +1,12 @@
 'use server'
 
+import { apiBaseUrl } from "./utils"
+import { headers } from "./utils"
 
-export async function getLLMResponse(prompt: { prompt: string }) {
+export async function getLLMResponse(prompt: string) {
   try {
-    const response = await fetch("http://localhost:5004/generateChat", {
-      method: "POST", headers: {
-        "Authorization": `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImNsaW50b25waGlsYXRob25nIiwic3ViIjoiY2xpbnRvbnBoaWxhdGhvbmciLCJqdGkiOiIyNGNmNmNlZSIsImF1ZCI6WyJodHRwOi8vbG9jYWxob3N0Ojk5NTMiLCJodHRwczovL2xvY2FsaG9zdDo0NDM3MSIsImh0dHA6Ly9sb2NhbGhvc3Q6NTAwNCIsImh0dHBzOi8vbG9jYWxob3N0OjcyMjAiXSwibmJmIjoxNzQ1MTI2Njk4LCJleHAiOjE3NTI5ODkwOTgsImlhdCI6MTc0NTEyNjY5OSwiaXNzIjoiZG90bmV0LXVzZXItand0cyJ9.bYWQh11IVJLLHZNbO1Jghk7LcFUNtLP3ChgeWv8wBsY`,
-        'Content-Type': 'application/json',
-      }, body: JSON.stringify(prompt)
+    const response = await fetch(`${apiBaseUrl}/generateChat`, {
+      method: "POST", headers, body: JSON.stringify({ prompt: prompt })
     })
 
     if (!response.ok) {
@@ -16,13 +15,79 @@ export async function getLLMResponse(prompt: { prompt: string }) {
     }
 
     const data = await response.json()
-    console.log(data)
     return {
       data,
       success: true,
     }
   } catch (error) {
     console.error(error)
+    return { success: false }
   }
 
 }
+
+export async function saveNote(userId: string, title: string, prompt: string, content: string) {
+  try {
+    const response = await fetch(`${apiBaseUrl}/notes/create`, {
+      method: "POST", headers, body: JSON.stringify({
+        userId,
+        title,
+        prompt,
+        content
+      })
+    })
+    if (!response.ok) {
+      console.error("Failed to save LLM response", response.statusText)
+      return { success: false }
+    }
+    const data = await response.json()
+    return {
+      data,
+      success: true
+    }
+  } catch (error) {
+    console.error(error)
+    return { success: false }
+  }
+}
+
+export async function getNoteById(noteId: string) {
+  try {
+    const response = await fetch(`${apiBaseUrl}/notes/${noteId}`, { method: "GET", headers })
+
+    if (!response.ok) {
+      console.error("Failed to get note", response.statusText)
+      return { success: false }
+    }
+    const data = await response.json()
+    return {
+      data,
+      success: true
+    }
+  } catch (error) {
+    console.error(error)
+    return { success: false }
+  }
+}
+
+export async function getAllUserNotes(id: string) {
+  try {
+    const response = await fetch(`${apiBaseUrl}/users/notes/${id}`)
+
+    if (!response.ok) {
+      console.error("Failed to get all users notes", response.statusText)
+      return { success: false }
+    }
+
+    const data = await response.json()
+    return {
+      data,
+      success: true
+    }
+
+  } catch (error) {
+    console.error(error)
+    return { success: false }
+  }
+}
+
