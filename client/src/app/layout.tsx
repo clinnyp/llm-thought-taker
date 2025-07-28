@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
-import { SidebarProvider } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/app-sidebar";
 import "./globals.css";
-import StoreProvider from "./StoreProvider";
+import { Providers } from "./providers";
 
 export const metadata: Metadata = {
   title: "Thought-Taker",
@@ -15,13 +13,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <StoreProvider>
-      <SidebarProvider>
-        <AppSidebar />
-        <html>
-          <body>{children}</body>
-        </html>
-      </SidebarProvider>
-    </StoreProvider>
+    <html lang="en">
+      <body>
+        <Providers>{children}</Providers>
+      </body>
+    </html>
   );
 }
