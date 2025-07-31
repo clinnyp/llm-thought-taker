@@ -36,7 +36,6 @@ async function createUser(payload: any) {
     }
     const response = await fetch(`${apiBaseUrl}/user`, {
       method: 'POST',
-      headers: await getHeaders(),
       body: JSON.stringify(data),
     })
     if (!response.ok) {
@@ -55,7 +54,6 @@ async function deleteUser(payload: any) {
   try {
     const response = await fetch(`${apiBaseUrl}/user/${payload.id}`, {
       method: 'DELETE',
-      headers: await getHeaders(),
     })
     if (!response.ok) {
       throw new Error('Failed to delete user data')
