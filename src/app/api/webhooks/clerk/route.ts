@@ -1,4 +1,5 @@
-import { apiBaseUrl } from '@/actions/utils'
+import { apiBaseUrl } from '@/lib/utils'
+import { getHeaders } from '@/actions/utils'
 import { verifyWebhook } from '@clerk/nextjs/webhooks'
 import { NextRequest } from 'next/server'
 
@@ -11,6 +12,9 @@ export async function POST(req: NextRequest) {
     switch (eventType) {
       case 'user.created':
         await createUser(evt.data)
+        break
+      case 'user.deleted':
+        await deleteUser(evt.data)
         break
       default:
     }
@@ -32,9 +36,7 @@ async function createUser(payload: any) {
     }
     const response = await fetch(`${apiBaseUrl}/user`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: await getHeaders(),
       body: JSON.stringify(data),
     })
     if (!response.ok) {
@@ -45,4 +47,21 @@ async function createUser(payload: any) {
     console.error('Error saving user data:', error)
   }
 
+
+
+}
+
+async function deleteUser(payload: any) {
+  try {
+    const response = await fetch(`${apiBaseUrl}/user/${payload.id}`, {
+      method: 'DELETE',
+      headers: await getHeaders(),
+    })
+    if (!response.ok) {
+      throw new Error('Failed to delete user data')
+    }
+    return new Response('Webhook received', { status: 200 })
+  } catch (error) {
+    console.error('Error deleting user data:', error)
+  }
 }
