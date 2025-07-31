@@ -25,7 +25,7 @@ export default function PromptForm() {
     dispatch(updateLoading(true));
     if (prompt.trim() === "") return;
     const response = await getLLMResponse(prompt);
-    dispatch(updateResponse(response?.data));
+    dispatch(updateResponse(response?.chat));
     dispatch(updateLoading(false));
   };
 
