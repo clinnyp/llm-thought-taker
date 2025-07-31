@@ -1,6 +1,17 @@
-export const apiBaseUrl = `${process.env.API_URL}`
+'use server'
 
-export const headers = {
-  "Authorization": `Bearer ${process.env.AUTH_TOKEN}`,
-  'Content-Type': 'application/json',
+import { auth } from "@clerk/nextjs/server"
+
+export const getHeaders = async () => {
+  try {
+    const { getToken } = await auth()
+    const token = await getToken()
+
+    return {
+      "Authorization": `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    }
+  } catch (error) {
+    console.error('Failed to get auth token:', error)
+  }
 }
