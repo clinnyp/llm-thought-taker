@@ -1,12 +1,13 @@
 'use server'
 
+import { currentUser } from "@clerk/nextjs/server"
 import { apiBaseUrl } from "./utils"
 import { headers } from "./utils"
 
 export async function getLLMResponse(prompt: string) {
   try {
-    const response = await fetch(`${apiBaseUrl}/generateChat`, {
-      method: "POST", headers, body: JSON.stringify({ prompt: prompt })
+    const response = await fetch(`${apiBaseUrl}/generate_chat`, {
+      method: "POST", body: JSON.stringify({ prompt: prompt })
     })
 
     if (!response.ok) {
@@ -16,7 +17,7 @@ export async function getLLMResponse(prompt: string) {
 
     const data = await response.json()
     return {
-      data,
+      ...data,
       success: true,
     }
   } catch (error) {
@@ -26,14 +27,16 @@ export async function getLLMResponse(prompt: string) {
 
 }
 
-export async function saveNote(userId: string, title: string, prompt: string, content: string) {
+export async function createNote(title: string, prompt: string, content: string) {
   try {
-    const response = await fetch(`${apiBaseUrl}/notes/create`, {
+    const user = await currentUser()
+    const externalUserId = user?.id
+    const response = await fetch(`${apiBaseUrl}/notes`, {
       method: "POST", headers, body: JSON.stringify({
-        userId,
         title,
         prompt,
-        content
+        content,
+        external_user_id: externalUserId
       })
     })
     if (!response.ok) {
@@ -42,7 +45,7 @@ export async function saveNote(userId: string, title: string, prompt: string, co
     }
     const data = await response.json()
     return {
-      data,
+      ...data,
       success: true
     }
   } catch (error) {
@@ -53,15 +56,16 @@ export async function saveNote(userId: string, title: string, prompt: string, co
 
 export async function getNoteById(noteId: string) {
   try {
-    const response = await fetch(`${apiBaseUrl}/notes/${noteId}`, { method: "GET", headers })
-
+    const user = await currentUser()
+    const externalUserId = user?.id
+    const response = await fetch(`${apiBaseUrl}/notes/${noteId}/users/${externalUserId}`, { method: "GET" })
     if (!response.ok) {
       console.error("Failed to get note", response.statusText)
       return { success: false }
     }
     const data = await response.json()
     return {
-      data,
+      ...data,
       success: true
     }
   } catch (error) {
@@ -70,9 +74,29 @@ export async function getNoteById(noteId: string) {
   }
 }
 
-export async function getAllUserNotes(id: string) {
+export async function deleteNote(noteId: string) {
   try {
-    const response = await fetch(`${apiBaseUrl}/users/notes/${id}`)
+    const response = await fetch(`${apiBaseUrl}/notes/${noteId}`, { method: "DELETE" })
+    if (!response.ok) {
+      console.error("Failed to delete note", response.statusText)
+      return { success: false }
+    }
+    const data = await response.json()
+    return {
+      ...data,
+      success: true
+    }
+  } catch (error) {
+    console.error(error)
+    return { success: false }
+  }
+}
+
+export async function getAllUserNotes() {
+  try {
+    const user = await currentUser()
+    const externalUserId = user?.id
+    const response = await fetch(`${apiBaseUrl}/notes/users/${externalUserId}`)
 
     if (!response.ok) {
       console.error("Failed to get all users notes", response.statusText)
