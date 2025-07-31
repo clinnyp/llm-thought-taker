@@ -1,4 +1,4 @@
-export const apiBaseUrl = `${process.env.API_ENDPOINT}`
+export const apiBaseUrl = `${process.env.API_URL}`
 
 export const headers = {
   "Authorization": `Bearer ${process.env.AUTH_TOKEN}`,

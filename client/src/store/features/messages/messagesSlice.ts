@@ -1,21 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
-import { act } from 'react';
-
-interface User {
-  id: string;
-  name: string;
-}
-
-interface Note {
-  id: string;
-  userId: string;
-  user?: User;
-  title: string;
-  prompt: string;
-  content: string;
-  createdAt: Date;
-}
+import { Note } from '@/types';
 
 export interface MessageState {
   prompt: string
@@ -42,7 +27,7 @@ export const messagesSlice = createSlice({
       state.response = action.payload
     },
     resetMessages: (state) => {
-      return { ...state, prompt: "", response: "" }
+      return { ...state, prompt: "", response: "", allNotes: [] }
     },
     updateLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload
