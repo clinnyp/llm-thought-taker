@@ -1,4 +1,3 @@
-import { saveNote } from "@/actions/notes";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -11,16 +10,14 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { updateNotes } from "@/store/features/messages/messagesSlice";
+import { useCreateNote } from "@/hooks/use-notes";
 import { RootState } from "@/store/store";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 export function SaveNoteTitle() {
-  const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [title, setTitle] = useState("");
 
   const prompt = useSelector((state: RootState) => state.messages.prompt);
@@ -28,21 +25,25 @@ export function SaveNoteTitle() {
     (state: RootState) => state.messages.response
   );
 
+  const createNoteMutation = useCreateNote();
+
   const handleSaveNote = async () => {
-    setIsLoading(true);
-    const response = await saveNote(
-      "0c4fa536-1079-465c-8f9a-2a893416ec9f",
-      title,
-      prompt,
-      chatResponse
-    );
-    if (response.success) {
-      console.log("this is the here", response);
-      setIsLoading(false);
+    if (!title.trim()) return;
+
+    try {
+      await createNoteMutation.mutateAsync({
+        title: title.trim(),
+        prompt,
+        content: chatResponse,
+      });
+
+      setTitle("");
       setIsOpen(false);
-      dispatch(updateNotes([response.data]));
+    } catch (error) {
+      console.error("Failed to create note:", error);
     }
   };
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
@@ -52,7 +53,7 @@ export function SaveNoteTitle() {
         <DialogHeader>
           <DialogTitle>Save Note</DialogTitle>
           <DialogDescription>
-            Set the title of your note. Click save when you're done.
+            Set the title of your note. Click save when you&apos;re done.
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
@@ -62,20 +63,25 @@ export function SaveNoteTitle() {
             </Label>
             <Input
               id="title"
+              value={title}
               onChange={(e) => setTitle(e.target.value)}
               className="col-span-3"
+              placeholder="Enter note title..."
             />
           </div>
         </div>
         <DialogFooter>
           <Button
-            disabled={isLoading}
+            disabled={createNoteMutation.isPending || !title.trim()}
             onClick={handleSaveNote}
             className="relative"
           >
-            {isLoading && <Loader2 className="animate-spin absolute" />}
-
-            <span className={isLoading ? "opacity-0" : ""}>Save</span>
+            {createNoteMutation.isPending && (
+              <Loader2 className="animate-spin absolute" />
+            )}
+            <span className={createNoteMutation.isPending ? "opacity-0" : ""}>
+              Save
+            </span>
           </Button>
         </DialogFooter>
       </DialogContent>
