@@ -1,5 +1,4 @@
 import { apiBaseUrl } from '@/lib/utils'
-import { getHeaders } from '@/actions/utils'
 import { verifyWebhook } from '@clerk/nextjs/webhooks'
 import { NextRequest } from 'next/server'
 
