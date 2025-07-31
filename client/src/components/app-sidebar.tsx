@@ -10,7 +10,6 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { NavMain } from "./nav-main";
-import { SearchForm } from "./search-form";
 import { Brain } from "lucide-react";
 import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
