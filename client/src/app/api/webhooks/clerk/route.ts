@@ -58,7 +58,10 @@ async function deleteUser(payload: any) {
   try {
     const response = await fetch(`${apiBaseUrl}/user/${payload.id}`, {
       method: 'DELETE',
-      headers: await getHeaders()
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Internal-Api-Key': process.env.X_INTERNAL_API_KEY!,
+      },
     })
     if (!response.ok) {
       throw new Error('Failed to delete user data')
