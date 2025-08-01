@@ -7,7 +7,6 @@ export async function POST(req: NextRequest) {
   try {
     const evt = await verifyWebhook(req)
     const eventType = evt.type
-    console.log('this is the evt', evt)
 
     switch (eventType) {
       case 'user.created':
