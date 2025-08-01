@@ -38,7 +38,7 @@ async function createUser(payload: any) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-Internal-Api-Key': process.env.INTERNAL_API_KEY!,
+        'X-Internal-Api-Key': process.env.X_INTERNAL_API_KEY!,
       },
       body: JSON.stringify(data),
     })
