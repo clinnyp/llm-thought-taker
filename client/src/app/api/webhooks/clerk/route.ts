@@ -42,6 +42,9 @@ async function createUser(payload: any) {
       },
       body: JSON.stringify(data),
     })
+    console.log('this is the response status', response.status)
+    const responseBody = await response.json()
+    console.log('this is the response body', responseBody)
     if (!response.ok) {
       throw new Error('Failed to save user data')
     }
