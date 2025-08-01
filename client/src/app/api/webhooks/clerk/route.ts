@@ -1,3 +1,4 @@
+import { getHeaders } from '@/actions/utils'
 import { apiBaseUrl } from '@/lib/utils'
 import { verifyWebhook } from '@clerk/nextjs/webhooks'
 import { NextRequest } from 'next/server'
@@ -35,11 +36,12 @@ async function createUser(payload: any) {
     }
     const response = await fetch(`${apiBaseUrl}/user`, {
       method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-INTERNAL-API-KEY': process.env.INTERNAL_API_KEY!,
+      },
       body: JSON.stringify(data),
     })
-    console.log('this is the response status', response.status)
-    const responseBody = await response.json()
-    console.log('this is the response body', responseBody)
     if (!response.ok) {
       throw new Error('Failed to save user data')
     }
@@ -56,6 +58,7 @@ async function deleteUser(payload: any) {
   try {
     const response = await fetch(`${apiBaseUrl}/user/${payload.id}`, {
       method: 'DELETE',
+      headers: await getHeaders()
     })
     if (!response.ok) {
       throw new Error('Failed to delete user data')
