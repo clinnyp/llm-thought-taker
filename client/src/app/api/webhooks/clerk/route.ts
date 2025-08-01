@@ -41,6 +41,9 @@ async function createUser(payload: any) {
     if (!response.ok) {
       throw new Error('Failed to save user data')
     }
+    console.log('this is the response status', response.status)
+    const responseBody = await response.json()
+    console.log('this is the response body', responseBody)
     return new Response('Webhook received', { status: 200 })
   } catch (error) {
     console.error('Error saving user data:', error)
