@@ -7,6 +7,7 @@ export async function POST(req: NextRequest) {
   try {
     const evt = await verifyWebhook(req)
     const eventType = evt.type
+    console.log('this is the evt', evt)
 
     switch (eventType) {
       case 'user.created':
@@ -31,7 +32,7 @@ async function createUser(payload: any) {
       first_name: payload.first_name,
       last_name: payload.last_name,
       external_id: payload.id,
-      email_address: payload.email_addresses[0].email_address
+      email_address: payload.email_addresses[0]?.email_address || ''
     }
     const response = await fetch(`${apiBaseUrl}/user`, {
       method: 'POST',
