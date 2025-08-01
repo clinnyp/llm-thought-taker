@@ -37,12 +37,12 @@ async function createUser(payload: any) {
       method: 'POST',
       body: JSON.stringify(data),
     })
-    if (!response.ok) {
-      throw new Error('Failed to save user data')
-    }
     console.log('this is the response status', response.status)
     const responseBody = await response.json()
     console.log('this is the response body', responseBody)
+    if (!response.ok) {
+      throw new Error('Failed to save user data')
+    }
     return new Response('Webhook received', { status: 200 })
   } catch (error) {
     console.error('Error saving user data:', error)
