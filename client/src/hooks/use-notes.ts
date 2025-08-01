@@ -12,8 +12,9 @@ export function useNotes() {
       }
       return response.data.notes;
     },
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 10 * 60 * 1000,
     retry: 1,
+    refetchOnWindowFocus: false
   });
 }
 

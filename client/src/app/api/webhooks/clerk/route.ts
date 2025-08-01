@@ -38,13 +38,10 @@ async function createUser(payload: any) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-INTERNAL-API-KEY': process.env.INTERNAL_API_KEY!,
+        'X-Internal-Api-Key': process.env.INTERNAL_API_KEY!,
       },
       body: JSON.stringify(data),
     })
-    console.log('this is the response status', response.status)
-    const responseBody = await response.json()
-    console.log('this is the response body', responseBody)
     if (!response.ok) {
       throw new Error('Failed to save user data')
     }

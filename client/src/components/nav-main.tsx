@@ -15,7 +15,7 @@ import { useNotes, useDeleteNote } from "@/hooks/use-notes";
 export function NavMain({
   ...props
 }: {} & React.ComponentPropsWithoutRef<typeof SidebarGroup>) {
-  const { data: allNotes = [], isLoading, error } = useNotes();
+  const { data: allNotes = [], error } = useNotes();
   const deleteNoteMutation = useDeleteNote();
 
   const handleDeleteNote = async (noteId: string, e: React.MouseEvent) => {
@@ -28,34 +28,6 @@ export function NavMain({
       console.error("Failed to delete note:", error);
     }
   };
-
-  if (isLoading) {
-    return (
-      <SidebarGroup {...props}>
-        <SidebarGroupContent>
-          <SidebarMenu>
-            <SidebarMenuItem className="pb-1">
-              <div className="animate-pulse bg-gray-200 h-4 rounded w-3/4"></div>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarGroupContent>
-      </SidebarGroup>
-    );
-  }
-
-  if (error) {
-    return (
-      <SidebarGroup {...props}>
-        <SidebarGroupContent>
-          <SidebarMenu>
-            <SidebarMenuItem className="pb-1">
-              <div className="text-red-500 text-sm">Failed to load notes</div>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarGroupContent>
-      </SidebarGroup>
-    );
-  }
 
   return (
     <SidebarGroup {...props}>
