@@ -11,10 +11,12 @@ import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useNotes, useDeleteNote } from "@/hooks/use-notes";
+import { useRouter } from "next/navigation";
 
 export function NavMain({
   ...props
 }: {} & React.ComponentPropsWithoutRef<typeof SidebarGroup>) {
+  const router = useRouter();
   const { data: allNotes = [], error } = useNotes();
   const deleteNoteMutation = useDeleteNote();
 
@@ -24,6 +26,7 @@ export function NavMain({
 
     try {
       await deleteNoteMutation.mutateAsync(noteId);
+      router.push("/chat");
     } catch (error) {
       console.error("Failed to delete note:", error);
     }
