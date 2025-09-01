@@ -15,10 +15,12 @@ import { RootState } from "@/store/store";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
 
 export function SaveNoteTitle() {
   const [isOpen, setIsOpen] = useState(false);
   const [title, setTitle] = useState("");
+  const router = useRouter();
 
   const prompt = useSelector((state: RootState) => state.messages.prompt);
   const chatResponse = useSelector(
@@ -31,7 +33,7 @@ export function SaveNoteTitle() {
     if (!title.trim()) return;
 
     try {
-      await createNoteMutation.mutateAsync({
+      const newNote = await createNoteMutation.mutateAsync({
         title: title.trim(),
         prompt,
         content: chatResponse,
@@ -39,6 +41,7 @@ export function SaveNoteTitle() {
 
       setTitle("");
       setIsOpen(false);
+      router.push(`/chat/note/${newNote.id}`);
     } catch (error) {
       console.error("Failed to create note:", error);
     }
