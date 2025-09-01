@@ -5,7 +5,7 @@ import { auth } from "@clerk/nextjs/server"
 export const getHeaders = async () => {
   try {
     const { getToken } = await auth()
-    const token = await getToken()
+    const token = await getToken({ template: "llm-thought-taker" })
 
     return {
       "Authorization": `Bearer ${token}`,
