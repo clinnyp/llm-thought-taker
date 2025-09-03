@@ -3,6 +3,7 @@ import { apiBaseUrl } from '@/lib/utils'
 import { verifyWebhook } from '@clerk/nextjs/webhooks'
 import { NextRequest } from 'next/server'
 
+// x-internal-api-key used because no jwt is created before users are created and verified
 
 export async function POST(req: NextRequest) {
   try {
@@ -42,6 +43,7 @@ async function createUser(payload: any) {
       },
       body: JSON.stringify(data),
     })
+    console.log('response', response)
     if (!response.ok) {
       throw new Error('Failed to save user data')
     }
