@@ -22,4 +22,5 @@ This projects follows a client-server architecture with identical apis on a .NET
 🔗 Check out the backend repositories for this project:
 
 .NET (on azure): <a href="https://github.com/clinnyp/llm-thought-taker-backend.dotnet" target="_blank">llm-thought-taker-backend.nodejs</a>
+
 Node.js (on aws): <a href="https://github.com/clinnyp/llm-thought-taker-backend.nodejs" target="_blank">unified-banking-app-backend</a>
