@@ -17,10 +17,10 @@ An app that allows users to save answers to curious thoughts they may have, powe
 This projects follows a client-server architecture with identical apis on a .NET backend deployed on Azure and a Node.js backend deployed on AWS. Utilising Clerk to handle Authentication.
 
 - **The frontend (this repository):** Built with React and Next.js and responsible for all the interations and client-side logic.
-- **The backend:** Deployed on AWS and/or Azure behind an api gateway with serverless compute functions respective equivalents
+- **The backend:** Deployed on AWS and/or Azure behind eachother's respective equivalent for API gateway and serverless functions for compute.
 
 🔗 Check out the backend repositories for this project:
 
-.NET (on azure): <a href="https://github.com/clinnyp/llm-thought-taker-backend.dotnet" target="_blank">llm-thought-taker-backend.nodejs</a>
+.NET (on azure): <a href="https://github.com/clinnyp/llm-thought-taker-backend.dotnet">llm-thought-taker-backend.dotnet</a>
 
-Node.js (on aws): <a href="https://github.com/clinnyp/llm-thought-taker-backend.nodejs" target="_blank">unified-banking-app-backend</a>
+Node.js (on aws): <a href="https://github.com/clinnyp/llm-thought-taker-backend.nodejs">llm-thought-taker-backend.nodejs</a>
