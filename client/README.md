@@ -1,36 +1,25 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<h1 align="center">
+  <a href="https://llm-thought-taker-frontend.vercel.app/">
+    LLM Thought-Taker
+  </a>
+</h1>
 
-## Getting Started
+<h4>
+An app that allows users to save answers to curious thoughts they may have, powered by Large Language Models. Identical REST apis built with .NET on Azure and Node.js on AWS.
+</h4>
 
-First, run the development server:
+<div align="center">
+  <img src="public/demo.png" alt="demo image" />
+</div>
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Architecture
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+This projects follows a client-server architecture with identical apis on a .NET backend deployed on Azure and a Node.js backend deployed on AWS. Utilising Clerk to handle Authentication.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **The frontend (this repository):** Built with React and Next.js and responsible for all the interations and client-side logic.
+- **The backend:** Deployed on AWS and/or Azure behind an api gateway with serverless compute functions respective equivalents
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+🔗 Check out the backend repositories for this project:
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+.NET (on azure): <a href="https://github.com/clinnyp/llm-thought-taker-backend.dotnet" target="_blank">llm-thought-taker-backend.nodejs</a>
+Node.js (on aws): <a href="https://github.com/clinnyp/llm-thought-taker-backend.nodejs" target="_blank">unified-banking-app-backend</a>
