@@ -17,6 +17,6 @@ WORKDIR /app
 
 COPY --from=build /app/publish .
 
-EXPOSE 8080
+EXPOSE 5000
 
 CMD ["dotnet", "llm-thought-taker.dll"]
