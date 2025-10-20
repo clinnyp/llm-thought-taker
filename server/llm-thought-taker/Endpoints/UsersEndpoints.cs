@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using llm_thought_taker.Data;
 using llm_thought_taker.Models;
+using llm_thought_taker.Filters;
 
 namespace llm_thought_taker.Endpoints;
 
@@ -11,16 +12,16 @@ public static class UsersEndpoints
 {
     public static void MapUsersEndpoints(this WebApplication app)
     {
-        var usersGroup = app.MapGroup("/users");
+        var usersGroup = app.MapGroup("/users").RequireAuthorization();
 
         // POST /user
-        usersGroup.MapPost("/", CreateUser);
+        usersGroup.MapPost("/", CreateUser).AllowAnonymous().AddEndpointFilter<ApiKeyAuthFilter>();
 
         // GET /user
         usersGroup.MapGet("/", GetAllUsers);
 
         // DELETE /user/{externalUserId}
-        usersGroup.MapDelete("/{externalUserId}", DeleteUser);
+        usersGroup.MapDelete("/{externalUserId}", DeleteUser).AllowAnonymous().AddEndpointFilter<ApiKeyAuthFilter>();
     }
 
     private static async Task<IResult> CreateUser(

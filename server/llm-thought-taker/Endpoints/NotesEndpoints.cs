@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using System.Security.Claims;
 using GenerativeAI;
 using llm_thought_taker.Data;
 using llm_thought_taker.DTOs;
@@ -14,7 +15,8 @@ public static class NotesEndpoints
 {
     public static void MapNotesEndpoints(this WebApplication app)
     {
-        var notesGroup = app.MapGroup("/notes");
+        var notesGroup = app.MapGroup("/notes")
+            .RequireAuthorization();
 
         // GET /notes/{noteId}/users/{externalUserId}
         notesGroup.MapGet("/{noteId}/users/{externalUserId}", GetNoteById);
@@ -29,7 +31,7 @@ public static class NotesEndpoints
         notesGroup.MapGet("/users/{externalUserId}", GetAllNotesForUser);
 
         // POST /generate_chat
-        app.MapPost("/generate_chat", GenerateChatResponse);
+        app.MapPost("/generate_chat", GenerateChatResponse).RequireAuthorization();
     }
 
     private static async Task<IResult> GetNoteById(
@@ -147,6 +149,7 @@ public static class NotesEndpoints
 
     private static async Task<IResult> GenerateChatResponse(
         [FromBody] PromptRequest prompt,
+        ClaimsPrincipal user,
         HttpContext context)
     {
         if (prompt?.Prompt == null)
