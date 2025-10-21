@@ -55,7 +55,7 @@ public static class UsersEndpoints
             return Results.BadRequest(new { message = "Invalid user" });
         }
         var dbUser = await db.Users
-            .Where(u => u.ExternalId == Guid.Parse(externalUserId))
+            .Where(u => u.ExternalId == externalUserId)
             .SingleOrDefaultAsync();
 
         if (dbUser == null)
@@ -66,7 +66,7 @@ public static class UsersEndpoints
         db.Users.Remove(dbUser);
         await db.SaveChangesAsync();
 
-        return Results.Ok(new { message = "User Deleted Successfully", user });
+        return Results.Ok(new { message = "User Deleted Successfully", user = dbUser });
     }
 }
 

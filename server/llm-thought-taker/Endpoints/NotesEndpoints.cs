@@ -129,7 +129,7 @@ public static class NotesEndpoints
         {
             var externalUserId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var dbUserId = await db.Users.Where(u => u.ExternalId == externalUserId).Select(u => u.Id).FirstOrDefaultAsync();
-            if (dbUserId == null)
+            if (dbUserId == Guid.Empty)
             {
                 return Results.NotFound(new { message = "User not found" });
             }
