@@ -7,12 +7,12 @@ public class ApiKeyAuthFilter : IEndpointFilter
     public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next)
     {
         var httpContext = context.HttpContext;
-        var apiKey = httpContext.Request.Headers["X-INTERNAL-API-KEY"].FirstOrDefault();
-        var expectedApiKey = Environment.GetEnvironmentVariable("INTERNAL_API_KEY");
+        var apiKey = httpContext.Request.Headers["X-Internal-Api-Key"].FirstOrDefault();
+        var expectedApiKey = Environment.GetEnvironmentVariable("X_INTERNAL_API_KEY");
 
         if (string.IsNullOrEmpty(expectedApiKey))
         {
-          throw new InvalidOperationException("INTERNAL_API_KEY is not configured. Set INTERNAL_API_KEY environment variable.");
+          throw new InvalidOperationException("X_INTERNAL_API_KEY is not configured. Set X_INTERNAL_API_KEY environment variable.");
         }
 
         if (string.IsNullOrEmpty(apiKey) || apiKey != expectedApiKey)

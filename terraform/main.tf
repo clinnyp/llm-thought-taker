@@ -71,6 +71,7 @@ resource "azurerm_linux_web_app" "webapp" {
     CLERK_DOMAIN = var.clerk_domain
     DB_CONNECTION_STRING = var.db_connection_string
     GEMINI_API_KEY = var.gemini_api_key
+    X_INTERNAL_API_KEY = var.x_internal_api_key
   }
 
   https_only = true
@@ -79,6 +80,11 @@ resource "azurerm_linux_web_app" "webapp" {
 # Variables
 
 variable "clerk_domain" {
+  type = string
+  sensitive = true
+}
+
+variable "x_internal_api_key" {
   type = string
   sensitive = true
 }

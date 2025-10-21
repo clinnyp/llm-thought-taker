@@ -45,6 +45,7 @@ jobs:
           -var="clerk_domain=${{ secrets.CLERK_DOMAIN }}" \
           -var="db_connection_string=${{ secrets.DB_CONNECTION_STRING }}" \
           -var="gemini_api_key=${{ secrets.GEMINI_API_KEY }}" \
+          -var="x_internal_api_key=${{ secrets.X_INTERNAL_API_KEY }}" \
           -var="image_tag=${{ github.sha }}" \
           -auto-approve
 
