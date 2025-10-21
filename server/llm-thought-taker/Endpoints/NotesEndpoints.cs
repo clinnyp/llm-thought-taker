@@ -72,15 +72,17 @@ public static class NotesEndpoints
 
     private static async Task<IResult> CreateNote(
         [FromBody] NoteRequest noteRequest,
+        ClaimsPrincipal user,
         AppDbContext db)
     {
+        var externalUserId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (noteRequest == null)
         {
             return Results.BadRequest(new { message = "Invalid Note" });
         }
 
         var user = await db.Users
-            .Where(u => u.ExternalId == noteRequest.ExternalUserId)
+            .Where(u => u.ExternalId == externalUserId)
             .SingleOrDefaultAsync();
         
         if (user == null)
