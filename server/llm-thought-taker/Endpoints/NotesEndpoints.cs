@@ -18,8 +18,8 @@ public static class NotesEndpoints
         var notesGroup = app.MapGroup("/notes")
             .RequireAuthorization();
 
-        // GET /notes/{noteId}/users/{externalUserId}
-        notesGroup.MapGet("/{noteId}/users/{externalUserId}", GetNoteById);
+        // GET /notes/{noteId}
+        notesGroup.MapGet("/{noteId}", GetNoteById);
 
         // POST /notes
         notesGroup.MapPost("/", CreateNote);
@@ -27,8 +27,8 @@ public static class NotesEndpoints
         // DELETE /notes/{noteId}
         notesGroup.MapDelete("/{noteId}", DeleteNote);
 
-        // GET /notes/users/{externalUserId}
-        notesGroup.MapGet("/users/{externalUserId}", GetAllNotesForUser);
+        // GET /notes/users
+        notesGroup.MapGet("/users", GetAllNotesForUser);
 
         // POST /generate_chat
         app.MapPost("/generate_chat", GenerateChatResponse).RequireAuthorization();
@@ -36,18 +36,19 @@ public static class NotesEndpoints
 
     private static async Task<IResult> GetNoteById(
         string noteId,
-        string externalUserId,
+        ClaimsPrincipal user,
         AppDbContext db)
     {
         try
         {
-            var user = await db.Users
+            var externalUserId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var dbUser = await db.Users
                 .Where(u => u.ExternalId == externalUserId)
                 .SingleOrDefaultAsync();
             
-            if (user == null)
+            if (dbUser == null)
             {
-                return Results.NotFound(new { message = "Note belonging to user not found" });
+                return Results.NotFound(new { message = "User not found" });
             }
 
             var note = await db.Notes
@@ -121,14 +122,20 @@ public static class NotesEndpoints
     }
 
     private static async Task<IResult> GetAllNotesForUser(
-        string externalUserId,
+        ClaimsPrincipal user,
         AppDbContext db)
     {
         try
         {
-            var notes = await db.Users
-                .Where(u => u.ExternalId == externalUserId)
-                .SelectMany(u => u.Notes)
+            var externalUserId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var dbUserId = await db.Users.Where(u => u.ExternalId == externalUserId).Select(u => u.Id).FirstOrDefaultAsync();
+            if (dbUserId == null)
+            {
+                return Results.NotFound(new { message = "User not found" });
+            }
+
+            var notes = await db.Notes
+                .Where(n => n.UserId == dbUserId)
                 .OrderByDescending(note => note.Created)
                 .ToListAsync();
 

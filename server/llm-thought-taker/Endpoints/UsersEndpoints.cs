@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using llm_thought_taker.Data;
 using llm_thought_taker.Models;
 using llm_thought_taker.Filters;
+using System.Security.Claims;
 
 namespace llm_thought_taker.Endpoints;
 
@@ -14,14 +15,14 @@ public static class UsersEndpoints
     {
         var usersGroup = app.MapGroup("/users").RequireAuthorization();
 
-        // POST /user
+        // POST /users
         usersGroup.MapPost("/", CreateUser).AllowAnonymous().AddEndpointFilter<ApiKeyAuthFilter>();
 
-        // GET /user
+        // GET /users
         usersGroup.MapGet("/", GetAllUsers);
 
-        // DELETE /user/{externalUserId}
-        usersGroup.MapDelete("/{externalUserId}", DeleteUser).AllowAnonymous().AddEndpointFilter<ApiKeyAuthFilter>();
+        // DELETE /users
+        usersGroup.MapDelete("/", DeleteUser).AllowAnonymous().AddEndpointFilter<ApiKeyAuthFilter>();
     }
 
     private static async Task<IResult> CreateUser(
@@ -46,19 +47,20 @@ public static class UsersEndpoints
     }
 
     private static async Task<IResult> DeleteUser(
-        string externalUserId,
+        ClaimsPrincipal user,
         AppDbContext db)
     {
-        var user = await db.Users
+        var externalUserId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var dbUser = await db.Users
             .Where(u => u.ExternalId == externalUserId)
             .SingleOrDefaultAsync();
 
-        if (user == null)
+        if (dbUser == null)
         {
             return Results.NotFound(new { message = "User not found" });
         }
 
-        db.Users.Remove(user);
+        db.Users.Remove(dbUser);
         await db.SaveChangesAsync();
 
         return Results.Ok(new { message = "User Deleted Successfully", user });
