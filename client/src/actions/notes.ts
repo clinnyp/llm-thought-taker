@@ -89,7 +89,7 @@ export async function deleteNote(noteId: string) {
 
 export async function getAllUserNotes() {
   try {
-    const response = await fetch(`${apiBaseUrl}/notes`, { headers: await getHeaders() })
+    const response = await fetch(`${apiBaseUrl}/notes/user`, { headers: await getHeaders() })
 
     if (!response.ok) {
       console.error("Failed to get all users notes", response.statusText)

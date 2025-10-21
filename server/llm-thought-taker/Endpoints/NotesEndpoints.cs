@@ -28,7 +28,7 @@ public static class NotesEndpoints
         notesGroup.MapDelete("/{noteId}", DeleteNote);
 
         // GET /notes/users
-        notesGroup.MapGet("/users", GetAllNotesForUser);
+        notesGroup.MapGet("/user", GetAllNotesForUser);
 
         // POST /generate_chat
         app.MapPost("/generate_chat", GenerateChatResponse).RequireAuthorization();

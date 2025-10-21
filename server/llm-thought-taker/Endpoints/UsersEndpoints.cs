@@ -13,7 +13,7 @@ public static class UsersEndpoints
 {
     public static void MapUsersEndpoints(this WebApplication app)
     {
-        var usersGroup = app.MapGroup("/users").RequireAuthorization();
+        var usersGroup = app.MapGroup("/user").RequireAuthorization();
 
         // POST /users
         usersGroup.MapPost("/", CreateUser).AllowAnonymous().AddEndpointFilter<ApiKeyAuthFilter>();
@@ -22,7 +22,7 @@ public static class UsersEndpoints
         usersGroup.MapGet("/", GetAllUsers);
 
         // DELETE /users
-        usersGroup.MapDelete("/", DeleteUser).AllowAnonymous().AddEndpointFilter<ApiKeyAuthFilter>();
+        usersGroup.MapDelete("/{externalUserId}", DeleteUser).AllowAnonymous().AddEndpointFilter<ApiKeyAuthFilter>();
     }
 
     private static async Task<IResult> CreateUser(
@@ -47,12 +47,15 @@ public static class UsersEndpoints
     }
 
     private static async Task<IResult> DeleteUser(
-        ClaimsPrincipal user,
+        string externalUserId,
         AppDbContext db)
     {
-        var externalUserId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(externalUserId))
+        {
+            return Results.BadRequest(new { message = "Invalid user" });
+        }
         var dbUser = await db.Users
-            .Where(u => u.ExternalId == externalUserId)
+            .Where(u => u.ExternalId == Guid.Parse(externalUserId))
             .SingleOrDefaultAsync();
 
         if (dbUser == null)

@@ -4,9 +4,11 @@ on:
   push:
     branches:
       - main
-    paths-ignore:
+    paths:
+      - 'server/**'
+      - 'terraform/**'
       - '.github/workflows/**'
-      - '.gitignore'
+      - 'Dockerfile'
   workflow_dispatch:
 
 jobs:
