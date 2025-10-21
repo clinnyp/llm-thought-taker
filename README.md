@@ -14,7 +14,7 @@ An app that allows users to save answers to curious thoughts they may have, powe
 
 ## Architecture
 
-This projects follows a client-server architecture with apis written on a .NET backend deployed on Azure utilising Clerk to handle Authentication.
+This projects follows a client-server architecture with apis written on a .NET backend deployed on Azure and Next.js frontend on Vercel. With Clerk handling Authentication and Neon Serverless Postgres for the database.
 
 - **The frontend:** Built with React and Next.js and responsible for all the interations and client-side logic.
 - **The backend:** .NET backend app deployed via ci/cd to Azure Web App for Containers via github actions and terraform provisioning.
