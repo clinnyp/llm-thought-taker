@@ -81,7 +81,7 @@ public static class NotesEndpoints
             return Results.BadRequest(new { message = "Invalid Note" });
         }
 
-        var user = await db.Users
+        var dbUser = await db.Users
             .Where(u => u.ExternalId == externalUserId)
             .SingleOrDefaultAsync();
         
@@ -92,7 +92,7 @@ public static class NotesEndpoints
 
         var note = new Note
         {
-            UserId = user.Id,
+            UserId = dbUser.Id,
             Title = noteRequest.Title ?? string.Empty,
             Content = noteRequest.Content ?? string.Empty,
             Prompt = noteRequest.Prompt ?? string.Empty,
