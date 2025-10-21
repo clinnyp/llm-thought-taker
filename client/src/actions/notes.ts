@@ -29,14 +29,11 @@ export async function getLLMResponse(prompt: string) {
 
 export async function createNote(title: string, prompt: string, content: string) {
   try {
-    const user = await currentUser()
-    const externalUserId = user?.id
     const response = await fetch(`${apiBaseUrl}/notes`, {
       method: "POST", headers: await getHeaders(), body: JSON.stringify({
         title,
         prompt,
         content,
-        external_user_id: externalUserId
       })
     })
     if (!response.ok) {
@@ -56,9 +53,7 @@ export async function createNote(title: string, prompt: string, content: string)
 
 export async function getNoteById(noteId: string) {
   try {
-    const user = await currentUser()
-    const externalUserId = user?.id
-    const response = await fetch(`${apiBaseUrl}/notes/${noteId}/users/${externalUserId}`, { method: "GET", headers: await getHeaders() })
+    const response = await fetch(`${apiBaseUrl}/notes/${noteId}`, { method: "GET", headers: await getHeaders() })
     if (!response.ok) {
       console.error("Failed to get note", response.statusText)
       return { success: false }
@@ -94,9 +89,7 @@ export async function deleteNote(noteId: string) {
 
 export async function getAllUserNotes() {
   try {
-    const user = await currentUser()
-    const externalUserId = user?.id
-    const response = await fetch(`${apiBaseUrl}/notes/users/${externalUserId}`, { headers: await getHeaders() })
+    const response = await fetch(`${apiBaseUrl}/notes`, { headers: await getHeaders() })
 
     if (!response.ok) {
       console.error("Failed to get all users notes", response.statusText)
