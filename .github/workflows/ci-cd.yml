@@ -39,7 +39,12 @@ jobs:
         run: | 
           cd terraform
           terraform init
-          terraform apply -var="image_tag=${{ github.sha }}" -auto-approve
+          terraform apply  \
+          -var="clerk_domain=${{ secrets.CLERK_DOMAIN }}" \
+          -var="db_connection_string=${{ secrets.DB_CONNECTION_STRING }}" \
+          -var="gemini_api_key=${{ secrets.GEMINI_API_KEY }}" \
+          -var="image_tag=${{ github.sha }}" \
+          -auto-approve
 
       - name: Terraform Outputs
         id: tf_outputs

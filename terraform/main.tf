@@ -68,12 +68,31 @@ resource "azurerm_linux_web_app" "webapp" {
   app_settings = {
     WEBSITES_PORT = "5000"
     ASPNETCORE_URLS = "http://+:5000"
+    CLERK_DOMAIN = var.clerk_domain
+    DB_CONNECTION_STRING = var.db_connection_string
+    GEMINI_API_KEY = var.gemini_api_key
   }
 
   https_only = true
 }
 
-# Varialbes
+# Variables
+
+variable "clerk_domain" {
+  type = string
+  sensitive = true
+}
+
+variable "db_connection_string" {
+  type = string
+  sensitive = true
+}
+
+variable "gemini_api_key" {
+  type = string
+  sensitive = true
+  default = ""
+}
 
 variable "image_tag" {
   description = "The tag of the image to deploy"
