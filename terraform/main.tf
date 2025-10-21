@@ -66,7 +66,8 @@ resource "azurerm_linux_web_app" "webapp" {
 } 
 
   app_settings = {
-    WEBSITES_PORT = "5000"
+    WEBSITES_PORT = "5000",
+    ASPNETCORE_URLS = "http://+:5000"
   }
 
   https_only = true
